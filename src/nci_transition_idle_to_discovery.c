@@ -298,9 +298,16 @@ nci_transition_idle_to_discovery_discover(
      */
 
     if (sm->op_mode & NFC_OP_MODE_RW) {
-        techs |= NCI_TECH_A_POLL |
+        /*
+         * Reader/writer only needs the passive poll modes. The active
+         * poll modes are for NFC-DEP (peer mode), and a controller that
+         * has no NFC-DEP (e.g. NXP SN220) rejects the whole RF_DISCOVER_CMD
+         * (STATUS_REJECTED) if they are in it. Android does not poll in
+         * active mode for reader/writer either.
+         */
+        techs |= NCI_TECH_A_POLL_PASSIVE |
             NCI_TECH_B_POLL |
-            NCI_TECH_F_POLL |
+            NCI_TECH_F_POLL_PASSIVE |
             NCI_TECH_V_POLL;
     }
 
