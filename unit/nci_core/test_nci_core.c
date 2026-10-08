@@ -4376,6 +4376,12 @@ int main(int argc, char* argv[])
     g_type_init();
     G_GNUC_END_IGNORE_DEPRECATIONS;
     g_test_init(&argc, &argv, NULL);
+    /*
+     * Don't let the build host's /etc/libncicore.conf (e.g. a device
+     * configuration installed in the build root) change the defaults the
+     * tests expect. Tests that need a configuration write their own.
+     */
+    nci_sm_config_file = NULL;
     g_test_add_func(TEST_("null"), test_null);
     g_test_add_func(TEST_("param"), test_param);
     g_test_add_func(TEST_("restart"), test_restart);
